@@ -68,28 +68,19 @@ if [[ "$UBUNTU_VERSION" != "22.04" && "$UBUNTU_VERSION" != "24.04" ]]; then
 fi
 
 ############################################
-# INTERACTIVE BUYER INPUT
-############################################
-echo -e "${YELLOW}[?] CUSTOMER INTAKE PROTOCOL:${RESET}"
-read -p "    Input Buyer Name (Username Telegram): " BUYER_NAME
-if [[ -z "$BUYER_NAME" ]]; then
-    BUYER_NAME="@unknown_buyer"
-fi
-echo ""
-
-############################################
-# AUTOMATIC TELEGRAM VARIABLE CAPTURE
+# AUTOMATIC VARIABLE CAPTURE (ANTI-STUCK)
 ############################################
 TG_TOKEN="${TOKEN:-}"
 TG_CHAT_ID="${CHAT_ID:-}"
+BUYER_NAME="${BUYER:-@unknown_buyer}"
 
 echo -e "${GREEN}[+] Target System Identified: Ubuntu $UBUNTU_VERSION${RESET}"
+echo -e "${GREEN}[+] Target Customer Managed  : ${BUYER_NAME}${RESET}"
 
-# Menggunakan struktur kurung siku ganda yang jauh lebih stabil untuk Bash Linux
 if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
-    echo -e "${GREEN}[+] Telegram Payload Mode: ENABLED (Creds detected)${RESET}"
+    echo -e "${GREEN}[+] Telegram Payload Mode   : ENABLED (Creds detected)${RESET}"
 else
-    echo -e "${YELLOW}[!] Telegram Payload Mode: DISABLED (Run with variables to enable)${RESET}"
+    echo -e "${YELLOW}[!] Telegram Payload Mode   : DISABLED (Run with variables to enable)${RESET}"
 fi
 echo -e "${GREEN}[+] Initializing Payload Injection...${RESET}\n"
 
