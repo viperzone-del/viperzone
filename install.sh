@@ -178,23 +178,23 @@ END_WARRANTY=$(TZ="Asia/Jakarta" date -d "+14 days" +"%A, %d %B %Y (%H:%M WIB)")
 SERVER_IP=$(curl -4 -s ifconfig.me || hostname -I | awk '{print $1}')
 
 ############################################
-# TELEGRAM NOTIFICATION DISPATCH
+# TELEGRAM NOTIFICATION DISPATCH (HTML MODE)
 ############################################
 if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
-    TG_MESSAGE="⚡ *VIPER ZONE CLOUD IDE DEPLOYED* ⚡%0A%0A"
-    TG_MESSAGE+="🛡️ *Aktivasi* : ${START_WARRANTY}%0A"
-    TG_MESSAGE+="⏳ *Expired Garansi* : ${END_WARRANTY} *(14 Hari Full)*%0A%0A"
-    TG_MESSAGE+="🖥️ *Host IP* : \`${SERVER_IP}\`%0A"
-    TG_MESSAGE+="🌐 *URL* : http://${SERVER_IP}:${PORT}%0A"
-    TG_MESSAGE+="👤 *Username* : \`${CUSTOM_USER}\`%0A"
-    TG_MESSAGE+="🔑 *Password* : \`${CUSTOM_PASS}\`%0A%0A"
-    TG_MESSAGE+="📢 *Telegram Support* : @admviper\_cloud%0A%0A"
-    TG_MESSAGE+="⚠️ _Garansi ganti baru 100% jika terjadi kendala system\._"
+    TG_MESSAGE="⚡ <b>VIPER ZONE CLOUD IDE DEPLOYED</b> ⚡%0A%0A"
+    TG_MESSAGE+="🛡️ <b>Aktivasi</b> : ${START_WARRANTY}%0A"
+    TG_MESSAGE+="⏳ <b>Expired Garansi</b> : ${END_WARRANTY} <i>(14 Hari Full)</i>%0A%0A"
+    TG_MESSAGE+="🖥️ <b>Host IP</b> : <code>${SERVER_IP}</code>%0A"
+    TG_MESSAGE+="🌐 <b>URL</b> : http://${SERVER_IP}:${PORT}%0A"
+    TG_MESSAGE+="👤 <b>Username</b> : <code>${CUSTOM_USER}</code>%0A"
+    TG_MESSAGE+="🔑 <b>Password</b> : <code>${CUSTOM_PASS}</code>%0A%0A"
+    TG_MESSAGE+="📢 <b>Telegram Support</b> : @admviper_cloud%0A%0A"
+    TG_MESSAGE+="⚠️ <i>Garansi ganti baru 100% jika terjadi kendala system.</i>"
 
     curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
         -d "chat_id=${TG_CHAT_ID}" \
         -d "text=${TG_MESSAGE}" \
-        -d "parse_mode=MarkdownV2" > /dev/null 2>&1 || true
+        -d "parse_mode=HTML" > /dev/null 2>&1 || true
 fi
 
 ############################################
