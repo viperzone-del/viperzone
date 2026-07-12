@@ -72,7 +72,7 @@ fi
 ############################################
 echo -e "${YELLOW}[?] CUSTOMER INTAKE PROTOCOL:${RESET}"
 read -p "    Input Buyer Name (Username Telegram): " BUYER_NAME
-if [ -z "$BUYER_NAME" ]; then
+if [[ -z "$BUYER_NAME" ]]; then
     BUYER_NAME="@unknown_buyer"
 fi
 echo ""
@@ -84,7 +84,9 @@ TG_TOKEN="${TOKEN:-}"
 TG_CHAT_ID="${CHAT_ID:-}"
 
 echo -e "${GREEN}[+] Target System Identified: Ubuntu $UBUNTU_VERSION${RESET}"
-if [ -n "$TG_TOKEN" ] && [ -n "$TG_CHAT_ID" ]; then
+
+# Menggunakan struktur kurung siku ganda yang jauh lebih stabil untuk Bash Linux
+if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
     echo -e "${GREEN}[+] Telegram Payload Mode: ENABLED (Creds detected)${RESET}"
 else
     echo -e "${YELLOW}[!] Telegram Payload Mode: DISABLED (Run with variables to enable)${RESET}"
@@ -190,7 +192,7 @@ SERVER_IP=$(curl -4 -s ifconfig.me || hostname -I | awk '{print $1}')
 ############################################
 # TELEGRAM NOTIFICATION DISPATCH (HTML MODE)
 ############################################
-if [ -n "$TG_TOKEN" ] && [ -n "$TG_CHAT_ID" ]; then
+if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
     TG_MESSAGE="⚡ <b>VIPER ZONE CLOUD IDE DEPLOYED</b> ⚡%0A%0A"
     TG_MESSAGE+="🛡️ <b>Aktivasi</b> : ${START_WARRANTY}%0A"
     TG_MESSAGE+="⏳ <b>Expired Garansi</b> : ${END_WARRANTY} <i>(14 Hari Full)</i>%0A%0A"
@@ -223,7 +225,7 @@ echo "  ╚═══╝  ╚═╝╚═╝     ╚══════╝╚═�
 echo "                  VIPER ZONE CLOUD Telegram :  @admviper_cloud              "
 echo "///////////////////////////////////////////////////////////"
 echo ""
-if [ -n "$TG_TOKEN" ] && [ -n "$TG_CHAT_ID" ]; then
+if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
     echo -e "${CYAN}  [⚡] Telegram Notification Dispatch: [SUCCESS]${RESET}\n"
 fi
 echo -e "${YELLOW}  [+] BUYER      : ${BUYER_NAME}"
