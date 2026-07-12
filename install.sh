@@ -68,6 +68,16 @@ if [[ "$UBUNTU_VERSION" != "22.04" && "$UBUNTU_VERSION" != "24.04" ]]; then
 fi
 
 ############################################
+# INTERACTIVE BUYER INPUT (BEFORE CORE RUN)
+############################################
+echo -e "${YELLOW}[?] CUSTOMER INTAKE PROTOCOL:${RESET}"
+read -p "    Input Buyer Name (Username Telegram): " BUYER_NAME
+if [[ -z "$BUYER_NAME" ]]; then
+    BUYER_NAME="@unknown_buyer"
+fi
+echo ""
+
+############################################
 # AUTOMATIC TELEGRAM VARIABLE CAPTURE
 ############################################
 TG_TOKEN="${TOKEN:-}"
@@ -184,6 +194,7 @@ if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
     TG_MESSAGE="⚡ <b>VIPER ZONE CLOUD IDE DEPLOYED</b> ⚡%0A%0A"
     TG_MESSAGE+="🛡️ <b>Aktivasi</b> : ${START_WARRANTY}%0A"
     TG_MESSAGE+="⏳ <b>Expired Garansi</b> : ${END_WARRANTY} <i>(14 Hari Full)</i>%0A%0A"
+    TG_MESSAGE+="👤 <b>Member</b> : ${BUYER_NAME}%0A"
     TG_MESSAGE+="🖥️ <b>Host IP</b> : <code>${SERVER_IP}</code>%0A"
     TG_MESSAGE+="🌐 <b>URL</b> : http://${SERVER_IP}:${PORT}%0A"
     TG_MESSAGE+="👤 <b>Username</b> : <code>${CUSTOM_USER}</code>%0A"
@@ -215,6 +226,7 @@ echo ""
 if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
     echo -e "${CYAN}  [⚡] Telegram Notification Dispatch: [SUCCESS]${RESET}\n"
 fi
+echo -e "${YELLOW}  [+] BUYER      : ${BUYER_NAME}"
 echo -e "${YELLOW}  [+] AKTIVASI   : ${START_WARRANTY}"
 echo -e "${YELLOW}  [+] GARANSI    : s/d ${END_WARRANTY} (14 Hari Ganti Baru Full)"
 echo -e "${YELLOW}  [+] URL        : http://${SERVER_IP}:${PORT}"
