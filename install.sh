@@ -68,11 +68,11 @@ if [[ "$UBUNTU_VERSION" != "22.04" && "$UBUNTU_VERSION" != "24.04" ]]; then
 fi
 
 ############################################
-# INTERACTIVE BUYER INPUT (BEFORE CORE RUN)
+# INTERACTIVE BUYER INPUT
 ############################################
 echo -e "${YELLOW}[?] CUSTOMER INTAKE PROTOCOL:${RESET}"
 read -p "    Input Buyer Name (Username Telegram): " BUYER_NAME
-if [[ -z "$BUYER_NAME" ]]; then
+if [ -z "$BUYER_NAME" ]; then
     BUYER_NAME="@unknown_buyer"
 fi
 echo ""
@@ -84,7 +84,7 @@ TG_TOKEN="${TOKEN:-}"
 TG_CHAT_ID="${CHAT_ID:-}"
 
 echo -e "${GREEN}[+] Target System Identified: Ubuntu $UBUNTU_VERSION${RESET}"
-if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
+if [ -n "$TG_TOKEN" ] && [ -n "$TG_CHAT_ID" ]; then
     echo -e "${GREEN}[+] Telegram Payload Mode: ENABLED (Creds detected)${RESET}"
 else
     echo -e "${YELLOW}[!] Telegram Payload Mode: DISABLED (Run with variables to enable)${RESET}"
@@ -190,7 +190,7 @@ SERVER_IP=$(curl -4 -s ifconfig.me || hostname -I | awk '{print $1}')
 ############################################
 # TELEGRAM NOTIFICATION DISPATCH (HTML MODE)
 ############################################
-if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
+if [ -n "$TG_TOKEN" ] && [ -n "$TG_CHAT_ID" ]; then
     TG_MESSAGE="⚡ <b>VIPER ZONE CLOUD IDE DEPLOYED</b> ⚡%0A%0A"
     TG_MESSAGE+="🛡️ <b>Aktivasi</b> : ${START_WARRANTY}%0A"
     TG_MESSAGE+="⏳ <b>Expired Garansi</b> : ${END_WARRANTY} <i>(14 Hari Full)</i>%0A%0A"
@@ -201,7 +201,6 @@ if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
     TG_MESSAGE+="🔑 <b>Password</b> : <code>${CUSTOM_PASS}</code>%0A%0A"
     TG_MESSAGE+="📢 <b>Telegram Support</b> : @admviper_cloud%0A%0A"
     TG_MESSAGE+="⚠️ <i>Garansi ganti baru 100% jika terjadi kendala system.</i>"
-    TG_MESSAGE+="🛠️ <code>[SYSTEM: AWS Cloud9 - Official Instance]</code>%0A"
 
     curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
         -d "chat_id=${TG_CHAT_ID}" \
@@ -224,7 +223,7 @@ echo "  ╚═══╝  ╚═╝╚═╝     ╚══════╝╚═�
 echo "                  VIPER ZONE CLOUD Telegram :  @admviper_cloud              "
 echo "///////////////////////////////////////////////////////////"
 echo ""
-if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
+if [ -n "$TG_TOKEN" ] && [ -n "$TG_CHAT_ID" ]; then
     echo -e "${CYAN}  [⚡] Telegram Notification Dispatch: [SUCCESS]${RESET}\n"
 fi
 echo -e "${YELLOW}  [+] BUYER      : ${BUYER_NAME}"
