@@ -67,11 +67,22 @@ if [[ "$UBUNTU_VERSION" != "22.04" && "$UBUNTU_VERSION" != "24.04" ]]; then
     exit 1
 fi
 
+############################################
+# AUTOMATIC TELEGRAM VARIABLE CAPTURE
+############################################
+TG_TOKEN="${TOKEN:-}"
+TG_CHAT_ID="${CHAT_ID:-}"
+
 echo -e "${GREEN}[+] Target System Identified: Ubuntu $UBUNTU_VERSION${RESET}"
+if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
+    echo -e "${GREEN}[+] Telegram Payload Mode: ENABLED (Creds detected)${RESET}"
+else
+    echo -e "${YELLOW}[!] Telegram Payload Mode: DISABLED (Run with variables to enable)${RESET}"
+fi
 echo -e "${GREEN}[+] Initializing Payload Injection...${RESET}\n"
 
 ############################################
-# CONFIGURATION (DEFAULT CREDENTIALS LOCKED)
+# CONFIGURATION
 ############################################
 CONTAINER_NAME="cloud9"
 PORT="8181"
@@ -143,7 +154,7 @@ systemctl restart nginx"
 run_task "Stabilizing environment protocols" \
 "sleep 15"
 
-# --- DIRECT EXECUTION (ANTI-HANG) ---
+# --- DIRECT EXECUTION (ANTI-HANG SUB-PROCESS) ---
 
 echo -ne "${CYAN}[>] Compiling Backend Core (PHP, Python3, Git)...${RESET}"
 docker exec ${CONTAINER_NAME} bash -c 'export DEBIAN_FRONTEND=noninteractive && apt update -y && apt install -y php php-cli php-curl php-mbstring php-xml php-zip php-mysql python3 python3-pip git curl wget zip unzip' > /dev/null 2>&1 || true
@@ -158,10 +169,27 @@ docker exec ${CONTAINER_NAME} bash -c 'php -r "copy(\"https://getcomposer.org/in
 echo -e "\b${GREEN}[DONE]${RESET}"
 
 ############################################
-# HACKER STYLE OUTPUT OVERRIDE (CUSTOM)
+# TELEGRAM NOTIFICATION DISPATCH
 ############################################
 SERVER_IP=$(curl -4 -s ifconfig.me || hostname -I | awk '{print $1}')
 
+if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
+    TG_MESSAGE="⚡ *VIPER ZONE CLOUD IDE DEPLOYED* ⚡%0A%0A"
+    TG_MESSAGE+="🖥️ *Host IP* : \`${SERVER_IP}\`%0A"
+    TG_MESSAGE+="🌐 *URL* : http://${SERVER_IP}:${PORT}%0A"
+    TG_MESSAGE+="👤 *Username* : \`${CUSTOM_USER}\`%0A"
+    TG_MESSAGE+="🔑 *Password* : \`${CUSTOM_PASS}\`%0A%0A"
+    TG_MESSAGE+="⚠️ _Please secure your environment after login\._"
+
+    curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+        -d "chat_id=${TG_CHAT_ID}" \
+        -d "text=${TG_MESSAGE}" \
+        -d "parse_mode=MarkdownV2" > /dev/null 2>&1 || true
+fi
+
+############################################
+# HACKER STYLE OUTPUT OVERRIDE
+############################################
 clear
 echo -e "${GREEN}"
 echo "/////////////////////////////DONE/////////////////////////"
@@ -174,6 +202,9 @@ echo "  ╚═══╝  ╚═╝╚═╝     ╚══════╝╚═�
 echo "                 VIPER ZONE CLOUD IDE DEPLOYED                 "
 echo "///////////////////////////////////////////////////////////"
 echo ""
+if [[ -n "$TG_TOKEN" && -n "$TG_CHAT_ID" ]]; then
+    echo -e "${CYAN}  [⚡] Telegram Notification Dispatch: [SUCCESS]${RESET}\n"
+fi
 echo -e "${YELLOW}  [+] URL      : http://${SERVER_IP}:${PORT}"
 echo -e "${YELLOW}  [+] Username : ${CUSTOM_USER}"
 echo -e "${YELLOW}  [+] Password : ${CUSTOM_PASS}"
